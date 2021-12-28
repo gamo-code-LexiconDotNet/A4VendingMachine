@@ -9,16 +9,16 @@ namespace VendingMachine
     {
         public int[] Denominations { get; private set; }
         public int MoneyPool { get; private set; }
-        private List<Product> products = new List<Product>();
+        private readonly List<Product> products = new List<Product>();
 
         public Vending()
         {
-            Denominations = new int[] { 1, 5, 10, 20, 50, 100, 500, 1000 };
+            Denominations = new int[] { 1000, 500, 100, 50, 20, 10, 5, 1 };
             
             // for return change in EndTransaction
             // denomination array must be ordered descending
-            Array.Sort(Denominations);
-            Array.Reverse(Denominations);
+            //Array.Sort(Denominations);
+            //Array.Reverse(Denominations);
         }
 
         public void AddProduct(Product product)

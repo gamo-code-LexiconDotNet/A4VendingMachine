@@ -6,17 +6,18 @@ namespace VendingMachine
 {
     public class DenominationException : Exception
     {
-        public DenominationException() { }
-        public DenominationException(
-            string message = "Not a valid denomination")
+        public DenominationException()
+            : base("Not a valid denomination.") { }
+        public DenominationException(string message)
             : base(message) { }
     }
 
     public class OutOfMoneyException : Exception
     {
-        public OutOfMoneyException() { }
+        public OutOfMoneyException()
+            : base("Out of money, insert more.") { }
         public OutOfMoneyException(
-            string message = "Out of money")
+            string message)
             : base(message) { }
     }
 }

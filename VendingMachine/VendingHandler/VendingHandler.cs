@@ -4,7 +4,7 @@ using System.Text;
 
 namespace VendingMachine
 {
-    public class VendingHandler
+    public class VendingHandler : IVendingHandler
     {
         private readonly IConsoleWrapper consoleWrapper;
         private readonly IVending vending;
@@ -15,37 +15,14 @@ namespace VendingMachine
             this.vending = vending;
         }
 
-        public void InsertMoney()
+        public void Purchase(int index)
         {
             try
             {
-                int money = int.Parse(consoleWrapper.ReadLine());
-                vending.InsertMoney(money);
-            } catch (DenominationException e)
-            {
-                consoleWrapper.WriteLine(e.Message);
-            } catch (FormatException e)
-            {
-                consoleWrapper.WriteLine(e.Message);
-            } catch 
-            {
-                consoleWrapper.WriteLine("Nope, try something else.");
-            }
-        }
-
-        public void Purchase()
-        {
-            try
-            {
-                int index = int.Parse(consoleWrapper.ReadLine());
                 string use = vending.Purchase(index);
-                consoleWrapper.WriteLine(use);
+                consoleWrapper.WriteLine("\n" + use);
             }
             catch (OutOfMoneyException e)
-            {
-                consoleWrapper.WriteLine(e.Message);
-            }
-            catch (FormatException e)
             {
                 consoleWrapper.WriteLine(e.Message);
             }
@@ -55,7 +32,7 @@ namespace VendingMachine
             }
         }
 
-        // not really used
+        // present for adherence to spec, not really used
         public void ShowAll()
         {
             foreach (string s in vending.ShowAll())
@@ -64,14 +41,19 @@ namespace VendingMachine
             }
         }
 
-        // for passing infos to menu to be menuitems
-        public string[] getInfos()
+        public string[] GetInfos()
         {
             return vending.ShowAll();
         }
 
-        public void InserMoney()
+        public void MoneyPool()
         {
+            consoleWrapper.WriteLine("\n$" + vending.MoneyPool.ToString());
+        }
+
+        public void InsertMoney()
+        {
+            consoleWrapper.Write("\nInsert money: ");
             try
             {
                 int money = int.Parse(consoleWrapper.ReadLine());
@@ -94,19 +76,22 @@ namespace VendingMachine
 
         public void EndTransaction()
         {
-            int[] denominations = vending.Denominations;
-            int[] change = vending.EndTransaction();
-
-            consoleWrapper.WriteLine("You change:");
-            for (int i = 0; i < denominations.Length; i++)
+            if (vending.MoneyPool > 0)
             {
-                if (change[i] != 0)
+                consoleWrapper.WriteLine($"\nYour change: ${vending.MoneyPool}");
+                int[] denominations = vending.Denominations;
+                int[] change = vending.EndTransaction();
+                for (int i = 0; i < denominations.Length; i++)
                 {
-                    consoleWrapper.WriteLine("[${0}] x {1}", 
-                        denominations[i], change[i]);
+                    if (change[i] != 0)
+                    {
+                        consoleWrapper.WriteLine("[${0}] x {1}", 
+                            denominations[i], change[i]);
+                    }
                 }
             }
-            consoleWrapper.WriteLine("Thank you for your bussiness, come back soon.");
+
+            consoleWrapper.WriteLine("\nThank you for your bussiness, come back soon.");
         }
     }
 
