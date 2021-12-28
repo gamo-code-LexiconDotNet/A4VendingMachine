@@ -7,13 +7,14 @@ namespace VendingMachine
 {
     public class Vending : IVending
     {
-        public int[] Denominations { get; private set; }
+        private readonly int[] denominations;
+        public int[] Denominations { get { return denominations; } }
         public int MoneyPool { get; private set; }
         private readonly List<Product> products = new List<Product>();
 
         public Vending()
         {
-            Denominations = new int[] { 1000, 500, 100, 50, 20, 10, 5, 1 };
+            denominations = new int[] { 1000, 500, 100, 50, 20, 10, 5, 1 };
             
             // for return change in EndTransaction
             // denomination array must be ordered descending
